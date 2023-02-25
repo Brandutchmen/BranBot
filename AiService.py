@@ -1,5 +1,4 @@
 from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler
-from transformers import Swin2SRForImageSuperResolution, AutoImageProcessor
 import torch
 from io import BytesIO
 import discord
@@ -27,12 +26,12 @@ class AiService:
         print("Loading Primary")
         self.scheduler = EulerDiscreteScheduler.from_pretrained(MODEL_ID, subfolder="scheduler")
         self.pipe = StableDiffusionPipeline.from_pretrained(MODEL_ID, scheduler=self.scheduler, revision="fp16", torch_dtype=torch.float16)
-        self.pipe.to("cuda")
+        self.pipe.to(PIPE_DRIVER)
         self.pipe.enable_attention_slicing()
 
         print("Loading Alt")
         self.altpipe = StableDiffusionPipeline.from_pretrained(ALT_MODEL_ID, torch_dtype=torch.float16)
-        self.altpipe.to("cuda")
+        self.altpipe.to(PIPE_DRIVER)
         # self.altpipe.scheduler = DPMSolverMultistepScheduler.from_config(self.altpipe.scheduler.config)
         self.altpipe.enable_attention_slicing()
 
